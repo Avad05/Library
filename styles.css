@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Asul:wght@400;700&display=swap');
+
+body{
+    height: 100%;
+    width: 100%;
+    background-image: url(inaki-del-olmo-NIJuEQw0RKg-unsplash.jpg);
+    background-repeat: no-repeat;
+    background-size: 100% ;
+    margin: 0%;  
+    padding: 0%;
+}
+.entire{
+    display: grid;
+    grid-template-rows: 130px 746px
+}
+.header{
+    background-color: rgb(98, 54, 24);
+    background-image: url(Screenshot_2025-03-08_16-16-51.png);
+    border: 5px solid black;
+    font-size: 80px;
+    font-family: "Asul", serif;
+    text-align: center;
+}
+.main{
+    display: grid;
+    
+    grid-template-columns: 300px 1fr;
+    grid-template-rows: 1fr;
+}
+.nav{
+    background-image: url(woo.png);
+    border: 5px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 100px;
+    
+}
+.nav > .bt{
+    height: 80px;
+    width: 120px;
+    font-size: 25px;
+    transition: all 0.3s ease;
+    border-radius: 5px;
+    background-color: rgb(156, 54, 54);
+}
+.bt:hover{
+    cursor: pointer;
+    transform: translateY(-3px);
+    box-shadow: 2px 7px 15px rgba(0, 0, 0, 0.2);
+}
+.books{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 5px;
+}
