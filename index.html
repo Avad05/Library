@@ -12,11 +12,40 @@
         <div class="header">LIBRARY</div>
         <div class="main">
             <div class="nav">
-                <button class="bt">+ Add Book</button>
+                <button class="bt" id="Button">+ Add Book</button>
 
             </div>
-            <div class="books"></div>
+            <div class="books" id="favbook"></div>
         </div>
+        <dialog id="favdialog">
+            <form method="dialog" id="form">
+                <p>
+                    <label for="name">Book name</label>
+                    <input id="name" type="text" name="title">
+                </p>
+                <p>
+                    <label for="author">Author</label>
+                    <input id="author" type="text" name="author">
+                </p>
+                <p>
+                    <label for="pages">Total Pages</label>
+                    <input type="number" id="pages" name="pages">
+                </p>
+                <p>
+                    <label for="read-status">Status</label>
+                    <select name="read" id="read-status">
+                        <option></option>
+                        <option>Reading</option>
+                        <option>Finished</option>
+                        <option>Not Started</option>
+                    </select>
+                </p>
+                <div class="actions">
+                    <button type="reset" id="cancel">Cancel</button>
+                    <button type="submit" id="submit">Submit</button>
+                </div>
+            </form>
+        </dialog>
     </div>
 </body>
 </html>
