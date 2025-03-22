@@ -1,100 +1,104 @@
 console.log("hello");
 
+let books = [];
 
-let books= [];
-
-function Book(title, author, pages, readStatus="Unread"){
-    if(!new.target){
-        throw Error("You must use new opeartor to call this function")
+class Book {
+    constructor(title, author, pages, readStatus = "Unread") {
+        this.id = crypto.randomUUID();
+        this.title = title;
+        this.author = author;
+        this.pages = Number(pages);
+        this.readStatus = readStatus;
     }
-    this.id = crypto.randomUUID();
-    this.title = title,
-    this.author = author,
-    this.pages = pages;
-    this.readStatus = this.readStatus;
-} 
-
-function addBookToLibrary(title, author, pages, readStatus){
-    pages = Number(pages);
-    const newBook = new Book(title, author, pages, readStatus);
-    books.push(newBook);
-    display_books();
 }
 
+class Library {
+    constructor() {
+        this.books = [];
+    }
 
-const adding = document.getElementById("Button");
-const dialog = document.getElementById("favdialog")
-const cancelButton = document.getElementById("cancel");
+    addBook(title, author, pages, readStatus) {
+        const newBook = new Book(title, author, pages, readStatus);
+        this.books.push(newBook);
+        this.displayBooks();
+    }
 
-adding.addEventListener("click", () =>{
-    dialog.showModal();
-})
+    deleteBook(bookId) {
+        this.books = this.books.filter(book => book.id !== bookId);
+        this.displayBooks();
+    }
 
-cancelButton.addEventListener("click", ()=>{
-    dialog.close();
-    
-})
+    updateReadStatus(bookId, newStatus) {
+        const book = this.books.find(book => book.id === bookId);
+        if (book) {
+            book.readStatus = newStatus;
+            this.displayBooks();
+        }
+    }
 
-function display_books(){
-    const bookList = document.getElementById("favbook");
-    bookList.innerHTML= "";
+    displayBooks() {
+        const bookList = document.getElementById("favbook");
+        bookList.innerHTML = "";
 
-    books.forEach(book =>{
-       const card = document.createElement("div");
-       card.classList.add("book-card");
+        this.books.forEach(book => {
+            const card = document.createElement("div");
+            card.classList.add("book-card");
 
-       console.log("Displaying Pages:", book.pages, typeof book.pages);
+            card.innerHTML = `
+                <h1>${book.title}</h1>
+                <p><strong>Author:</strong> ${book.author}</p>
+                <p><strong>Pages:</strong> ${book.pages}</p>
+                <label><strong>Status:</strong>
+                    <select class="status-select" data-id="${book.id}">
+                        <option value="Unread" ${book.readStatus === "Unread" ? "selected" : ""}>Unread</option>
+                        <option value="Read" ${book.readStatus === "Read" ? "selected" : ""}>Read</option>
+                        <option value="Reading" ${book.readStatus === "Reading" ? "selected" : ""}>Reading</option>
+                    </select>
+                </label>
+                <button class="delete-btn" data-id="${book.id}">🗑️</button>
+            `;
 
-       card.innerHTML = 
-       `<h1>${book.title}</h3>
-       <p><strong>Author:</strong> ${book.author}</p>
-       <p><strong>Pages:</strong> ${book.pages}</p>
-       <label><strong>Status:</strong>
-                <select class="status-select" data-id="${book.id}">
-                    <option value="Unread" ${book.readStatus === "Unread" ? "selected" : ""}>Unread</option>
-                 <option value="Read" ${book.readStatus === "Read" ? "selected" : ""}>Read</option>
-                 <option value="Reading" ${book.readStatus === "Reading" ? "selected" : ""}>Reading</option>
-                </select>
-            </label>
+            bookList.appendChild(card);
+        });
 
-            <button class="delete-btn" onclick="deleteBook('${book.id}')">
-                🗑️
-            </button>
-       `;
-       bookList.appendChild(card);
+        // Add event listeners for status change and delete buttons
+        document.querySelectorAll(".status-select").forEach(select => {
+            select.addEventListener("change", (event) => {
+                const bookId = event.target.dataset.id;
+                const newStatus = event.target.value;
+                library.updateReadStatus(bookId, newStatus);
+            });
+        });
 
-    })
+        document.querySelectorAll(".delete-btn").forEach(button => {
+            button.addEventListener("click", (event) => {
+                const bookId = event.target.dataset.id;
+                library.deleteBook(bookId);
+            });
+        });
+    }
 }
 
-document.getElementById("form").addEventListener("submit", function(event){
+// Create library instance
+const library = new Library();
+
+document.getElementById("form").addEventListener("submit", function(event) {
     event.preventDefault();
     const title = document.getElementById("name").value;
     const author = document.getElementById("author").value;
     const pages = document.getElementById("pages").value;
     const readStatus = document.getElementById("read-status").value;
 
-
-    console.log("Pages:", pages);
-
-    if(title && author && pages){
-        addBookToLibrary(title, author, pages, readStatus);
-        document.getElementById("form").reset(); 
-        dialog.close();   }
-
+    if (title && author && pages) {
+        library.addBook(title, author, pages, readStatus);
+        document.getElementById("form").reset();
+        dialog.close();
+    }
 });
 
-//function to update read status
-function updateReadStatus(bookId, newStatus) {
-    const book = books.find(b => b.id === bookId);
-    if (book) {
-        book.readStatus = newStatus;
-        display_books(); // Refresh display
-    }
-}
+const adding = document.getElementById("Button");
+const dialog = document.getElementById("favdialog");
+const cancelButton = document.getElementById("cancel");
 
-//funcion for deleting book
-function deleteBook(bookId) {
-    books = books.filter(book => book.id !== bookId); // Remove book from array
-    display_books(); // Refresh book list
-}
-
+adding.addEventListener("click", () => dialog.showModal());
+cancelButton.addEventListener("click", () => dialog.close());
